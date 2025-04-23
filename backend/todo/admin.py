@@ -1,11 +1,9 @@
 from django.contrib import admin
+from .models import Todo
 
-from .models import Todo  # add this
-
-
-class TodoAdmin(admin.ModelAdmin):  # add this
-    list_display = ('title', 'description', 'completed')  # add this
-
-
-# Register your models here.
-admin.site.register(Todo, TodoAdmin)  # add this
+@admin.register(Todo)
+class TodoAdmin(admin.ModelAdmin):
+    list_display = ('title', 'completed', 'user', 'id')
+    list_filter = ('completed', 'user')
+    search_fields = ('title', 'user__username')
+    list_per_page = 25

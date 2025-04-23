@@ -1,13 +1,12 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from .serializers import TodoSerializer
+from .models import Todo
 
+class TodoViewSet(viewsets.ModelViewSet):
+    serializer_class = TodoSerializer
 
-# viewsets class provides the implementation for CRUD operations by default, what we had to do was specify the serializer class and the query set.
+    def get_queryset(self):
+        return Todo.objects.filter(user=self.request.user)
 
-from rest_framework import viewsets          # add this
-from .serializers import TodoSerializer      # add this
-from .models import Todo                     # add this
-
-
-class TodoView(viewsets.ModelViewSet):       # add this
-    serializer_class = TodoSerializer          # add this
-    queryset = Todo.objects.all()              # add this
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
